@@ -1,0 +1,785 @@
+﻿namespace = gef_child_personality
+
+scripted_trigger suitably_proficient_blademaster = {
+    is_available_adult = yes
+    location = root.location
+    is_imprisoned = no
+    OR = {
+        prowess > 12
+        has_trait = lifestyle_blademaster
+    }
+    NOR = {
+        has_trait = incapable
+        has_trait = infirm
+        has_relation_rival = root
+        has_relation_potential_rival = root
+    }
+}
+
+# Brave, Diligent, Wrathful
+# Child is training with a sword
+gef_child_personality.0001 = {
+    type = character_event
+    title = gef_child_personality.0001.t
+    desc = gef_child_personality.0001.desc
+
+    theme = education
+    override_background = {
+        reference = courtyard
+    }
+    right_portrait = {
+        character = root
+        animation = severelywounded
+    }
+    left_portrait = {
+        character = scope:sword_tutor
+        animation = marshal
+    }
+
+    trigger = {
+        is_available_child = yes
+        OR = {
+            any_relation = {
+                type = guardian
+                suitably_proficient_blademaster = yes
+            }
+            AND = {
+                exists = host
+                host = {
+                    OR = {
+                        any_courtier = {
+                            suitably_proficient_blademaster = yes
+                        }
+                        any_knight = {
+                            suitably_proficient_blademaster = yes
+                        }
+                        any_vassal = {
+                            suitably_proficient_blademaster = yes
+                        }
+                    }
+                }
+            }
+        }
+        NAND = {
+            OR = {
+                has_trait = brave
+                has_trait = craven
+            }
+            OR = {
+                has_trait = diligent
+                has_trait = lazy
+            }
+            OR = {
+                has_trait = calm
+                has_trait = wrathful
+            }
+        }
+    }
+
+    weight_multiplier = {
+        base = 1
+        modifier = {
+            add = 2
+            has_trait = rowdy
+        }
+        modifier = {
+            add = 2
+            any_relation = {
+                type = guardian
+                OR = {
+                    has_trait = brave
+                    has_trait = diligent
+                    has_trait = wrathful
+                }
+            }
+        }
+        modifier = {
+            add = 5
+            culture = {
+                has_cultural_parameter = diligent_trait_more_common
+            }
+            NOR = {
+                has_trait = diligent
+                has_trait = lazy
+            }
+        }
+    }
+
+    immediate = {
+        save_scope_as = child
+        random_relation = {
+            type = guardian
+            save_scope_as = guardian
+        }
+
+        if = {
+            limit = {
+                scope:guardian = { suitably_proficient_blademaster = yes }
+            }
+            scope:guardian = {
+                add_to_list = potential_sword_tutors
+            }
+        }
+        host = {
+            every_courtier = {
+                limit = { suitably_proficient_blademaster = yes }
+                add_to_list = potential_sword_tutors
+            }
+            every_knight = {
+                limit = { suitably_proficient_blademaster = yes }
+                add_to_list = potential_sword_tutors
+            }
+            every_vassal = {
+                limit = { suitably_proficient_blademaster = yes }
+                add_to_list = potential_sword_tutors
+            }
+            ordered_in_list = {
+                list = potential_sword_tutors
+                order_by = prowess
+                position = 0
+                save_scope_as = sword_tutor
+            }
+        }   
+    }
+
+    option = {
+        name = gef_child_personality.0001.a
+        trigger = {
+            NOR = {
+                has_trait = brave
+                has_trait = craven
+            }
+        }
+        ai_chance = {
+            base = 1
+            modifier = {
+                add = 4
+                any_relation = {
+                    type = guardian
+                    has_trait = brave
+                }
+            }
+            modifier = {
+                add = -0.5
+                any_relation = {
+                    type = guardian
+                    has_trait = craven
+                }
+            }
+        }
+        add_trait = brave
+        if = {
+            limit = { is_ai = yes }
+            random_relation = {
+                type = guardian
+                if = {
+                    limit = { this = scope:sword_tutor }
+                    trigger_event = gef_child_personality.1001
+                }
+                else = {
+                    trigger_event = gef_child_personality.1002
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.0001.b
+        trigger = {
+            NOR = {
+                has_trait = diligent
+                has_trait = lazy
+            }
+        }
+        ai_chance = {
+            base = 1
+            modifier = {
+                add = 4
+                any_relation = {
+                    type = guardian
+                    has_trait = diligent
+                }
+            }
+            modifier = {
+                add = -0.5
+                any_relation = {
+                    type = guardian
+                    has_trait = lazy
+                }
+            }
+            modifier = {
+                add = 100
+                culture = {
+                    has_cultural_parameter = diligent_trait_more_common
+                }
+            }
+        }
+        add_trait = diligent
+        if = {
+            limit = { is_ai = yes }
+            random_relation = {
+                type = guardian
+                if = {
+                    limit = { this = scope:sword_tutor }
+                    trigger_event = gef_child_personality.1003
+                }
+                else = {
+                    trigger_event = gef_child_personality.1004
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.0001.c
+        trigger = {
+            NOR = {
+                has_trait = wrathful
+                has_trait = calm
+            }
+        }
+        ai_chance = {
+            base = 1
+            modifier = {
+                add = 4
+                any_relation = {
+                    type = guardian
+                    has_trait = wrathful
+                }
+            }
+            modifier = {
+                add = -0.5
+                any_relation = {
+                    type = guardian
+                    has_trait = calm
+                }
+            }
+        }
+        add_trait = wrathful
+        if = {
+            limit = { is_ai = yes }
+            random_relation = {
+                type = guardian
+                if = {
+                    limit = { this = scope:sword_tutor }
+                    trigger_event = gef_child_personality.1005
+                }
+                else = {
+                    trigger_event = gef_child_personality.1006
+                }
+            }
+        }
+    }
+}
+
+# Guardian responses
+
+## Responses to Brave/Diligent/Wrathful
+
+### Child has become Brave (sword tutor and guardian are the same person)
+gef_child_personality.1001 = {
+    type = character_event
+    title = gef_child_personality.1001.t
+    desc = gef_child_personality.1001.desc
+
+    theme = education
+    override_background = {
+        reference = courtyard
+    }
+    left_portrait = {
+        character = scope:child
+        animation = personality_bold
+    }
+    right_portrait = {
+        character = scope:sword_tutor
+        animation = marshal
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+                OR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1001.confirm_brave
+        custom_tooltip = child_personality.keeps_brave_tt
+    }
+
+    option = {
+        name = gef_child_personality.1001.diligent_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        stress_impact = {
+            base = child_trait_change_stress_penalty
+        }
+        scope:child = {
+            remove_trait = brave
+            add_trait_force_tooltip = diligent
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1001.wrathful_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        stress_impact = {
+            base = child_trait_change_stress_penalty
+        }
+        scope:child = {
+            remove_trait = brave
+            add_trait_force_tooltip = wrathful
+        }
+    }
+}
+
+### Child has become Brave (sword tutor and guardian are different people)
+gef_child_personality.1002 = {
+    type = character_event
+    title = gef_child_personality.1001.t
+    desc = gef_child_personality.1002.desc
+
+    theme = education
+    override_background = {
+        reference = study
+    }
+    left_portrait = {
+        character = scope:child
+        animation = personality_bold
+    }
+    right_portrait = {
+        character = scope:guardian
+        animation = worry
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+                OR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1001.confirm_brave
+        custom_tooltip = child_personality.keeps_brave_tt
+    }
+
+    option = {
+        name = gef_child_personality.1001.diligent_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        stress_impact = {
+            base = child_trait_change_stress_penalty
+        }
+        scope:child = {
+            remove_trait = brave
+            add_trait_force_tooltip = diligent
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1001.wrathful_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        stress_impact = {
+            base = child_trait_change_stress_penalty
+        }
+        scope:child = {
+            remove_trait = brave
+            add_trait_force_tooltip = wrathful
+        }
+    }
+}
+
+### Child has become Diligent (sword tutor and guardian are the same person)
+gef_child_personality.1003 = {
+    type = character_event
+    title = gef_child_personality.1003.t
+    desc = gef_child_personality.1003.desc
+
+    theme = education
+    override_background = {
+        reference = courtyard
+    }
+    left_portrait = {
+        character = scope:child
+        animation = sword_coup_degrace
+    }
+    right_portrait = {
+        character = scope:sword_tutor
+        animation = thinking
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+                OR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1003.confirm_diligent
+        custom_tooltip = child_personality.keeps_diligent_tt
+    }
+
+    option = {
+        name = gef_child_personality.1003.brave_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = diligent
+			add_trait_force_tooltip = brave
+		}
+    }
+
+    option = {
+        name = gef_child_personality.1003.wrathful_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = diligent
+			add_trait_force_tooltip = wrathful
+		}
+    }
+}
+
+### Child has become Diligent (sword tutor and guardian are different people)
+gef_child_personality.1004 = {
+    type = character_event
+    title = gef_child_personality.1003.t
+    desc = gef_child_personality.1004.desc
+
+    theme = education
+    override_background = {
+        reference = study
+    }
+    left_portrait = {
+        character = scope:sword_tutor
+        animation = admiration
+    }
+    lower_center_portrait = {
+        character = scope:child
+        animation = personality_bold
+    }
+    right_portrait = {
+        character = scope:guardian
+        animation = thinking
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+                OR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1003.confirm_diligent
+        custom_tooltip = child_personality.keeps_diligent_tt
+    }
+
+    option = {
+        name = gef_child_personality.1003.brave_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = diligent
+			add_trait_force_tooltip = brave
+		}
+    }
+
+    option = {
+        name = gef_child_personality.1003.wrathful_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = wrathful
+                    has_trait = calm
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = diligent
+			add_trait_force_tooltip = wrathful
+		}
+    }
+}
+
+### Child has become Wrathful (sword tutor and guardian are the same person)
+gef_child_personality.1005 = {
+    type = character_event
+    title = gef_child_personality.1005.t
+    desc = gef_child_personality.1005.desc
+    
+    theme = education
+    override_background = {
+        reference = courtyard
+    }
+    left_portrait = {
+        character = scope:child
+        animation = anger
+    }
+    right_portrait = {
+        character = scope:sword_tutor
+        animation = marshal
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+                OR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1005.confirm_wrathful
+        custom_tooltip = child_personality.keeps_wrathful_tt
+    }
+
+    option = {
+        name = gef_child_personality.1005.diligent_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = wrathful
+			add_trait_force_tooltip = diligent
+		}
+    }
+
+    option = {
+        name = gef_child_personality.1005.brave_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = wrathful
+			add_trait_force_tooltip = brave
+		}
+    }
+}
+
+### Child has become Wrathful (sword tutor and guardian are different people)
+gef_child_personality.1006 = {
+    type = character_event
+    title = gef_child_personality.1005.t
+    desc = gef_child_personality.1006.desc
+
+    theme = education
+    override_background = {
+        reference = study
+    }
+    left_portrait = {
+        character = scope:child
+        animation = anger
+    }
+    right_portrait = {
+        character = scope:guardian
+        animation = worry
+    }
+
+    trigger = {
+        scope:child = {
+            NAND = {
+                OR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+                OR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+    }
+
+    option = {
+        name = gef_child_personality.1005.confirm_wrathful
+        custom_tooltip = child_personality.keeps_wrathful_tt
+    }
+
+    option = {
+        name = gef_child_personality.1005.diligent_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = diligent
+                    has_trait = lazy
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = wrathful
+			add_trait_force_tooltip = diligent
+		}
+    }
+
+    option = {
+        name = gef_child_personality.1005.brave_change
+        trigger = {
+            scope:child = {
+                NOR = {
+                    has_trait = brave
+                    has_trait = craven
+                }
+            }
+        }
+        ai_chance = {
+			base = 0
+		}
+		stress_impact = {
+			base = child_trait_change_stress_penalty
+		}
+		scope:child = {
+			remove_trait = wrathful
+			add_trait_force_tooltip = brave
+		}
+    }
+}

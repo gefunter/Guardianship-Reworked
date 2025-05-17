@@ -1,0 +1,27 @@
+﻿l_english:
+  gef_child_personality.0001.t: "Sword Practice"
+  gef_child_personality.0001.desc: "My arms ache and my tunic is soaked in sweat. Again, my instructor [sword_tutor.GetTitledFirstName] knocks me down with a sharp smack of his wooden sword.\n\n\"Get up,\" [sword_tutor.GetSheHe] says. \"You won't always have someone fight your battles for you.\""
+  gef_child_personality.0001.a: "I am not afraid. The pain doesn't matter."
+  gef_child_personality.0001.b: "I need to keep trying. I will get it right next time."
+  gef_child_personality.0001.c: "[sword_tutor.GetSheHe|U] will regret that. Next time, I'll hit back harder."
+
+  gef_child_personality.1001.t: "A Bold Step Forward"
+  gef_child_personality.1001.desc: "Today during sword practice I struck [child.GetFirstNameNoTooltip] hard enough to rattle [child.GetHerHis] footing — not out of cruelty, but to teach.\n\nTo my surprise, [child.GetSheHe] rose again without hesitation. \"The pain doesn't scare me,\" [child.GetSheHe] said. \"I want to keep training.\""
+  gef_child_personality.1002.desc: "Today [child.GetFirstNameNoTooltip] returned from his sword training with [sword_tutor.GetTitledFirstName] a cut lip, scraped knees, and a fire in [child.GetHerHis] eyes.\n\n\"The pain doesn't scare me,\" [child.GetSheHe] told me. \"I want to keep training.\""
+  gef_child_personality.1001.confirm_brave: "Let [child.GetHerHim] be brave. The world could use more courage."
+  gef_child_personality.1001.diligent_change: "Courage is great, but discipline will carry [child.GetHerHim] further."
+  gef_child_personality.1001.wrathful_change: "Fearlessness is wasted without the will to strike back."
+
+  gef_child_personality.1003.t: "Practice and Persistence"
+  gef_child_personality.1003.desc: "I was packing up after sword practice with [child.GetFirstNameNoTooltip] when I noticed that [child.GetSheHe] was still in the yard, repeating the same movement over and over.\n\n\"I want to get it right,\" [child.GetSheHe] said, without even glancing my way.\n\nThe sun was low before [child.GetSheHe] finally stopped."
+  gef_child_personality.1004.desc: "[sword_tutor.GetTitledFirstName] came to me after today's sword training, almost in disbelief.\n\n\"[child.GetFirstName] kept practicing long after the others had gone,\" [sword_tutor.GetSheHe] said. \"[child.GetSheHe|U] kept trying over and over, until [child.GetSheHe] could land the strike perfectly. When I asked [child.GetHerHim] why, [child.GetSheHe] simply answered that [child.GetSheHe] wants to get better\"."
+  gef_child_personality.1003.confirm_diligent: "Let [child.GetHerHim] keep practicing. It will serve [child.GetHerHim] well."
+  gef_child_personality.1003.brave_change: "Courage cannot be mastered through repetition alone."
+  gef_child_personality.1003.wrathful_change: "There is power in passion, not just precision."
+
+  gef_child_personality.1005.t: "A Fire Within"
+  gef_child_personality.1005.desc: "I struck [child.GetFirstNameNoTooltip] hard enough to rattle [child.GetHerHis] footing — not out of cruelty, but to teach. But the look [child.GetSheHe] gave me afterward wasn't fear. It was fury. [child.GetSheHe|U] came at me with renewed strength without hesitation and with barely any concern for form — just raw will.\n\nWhen we finished sparring, [child.GetSheHe] said \"Next time, I'll make sure those blows don't reach me.\"\n\nThis spark could grow into something powerful. Or dangerous."
+  gef_child_personality.1006.desc: "[sword_tutor.GetTitledFirstName] came to see me after today's training, looking mildly troubled.\n\n\"There was a moment today during training,\" [sword_tutor.GetSheHe] said, \"After [child.GetFirstNameNoTooltip] was struck, [child.GetSheHe] lashed out — not just physically, but with fury. I tried to rein it in, but the anger didn't fade.\"\n\nLater I asked [child.GetFirstNameNoTooltip] about it. He simply replied \"They hit me, next time I will make sure they won't.\""
+  gef_child_personality.1005.confirm_wrathful: "Let [child.GetHerHis] fire burn. The world won't wait for gentle souls."
+  gef_child_personality.1005.diligent_change: "Raw strength means little without control."
+  gef_child_personality.1005.brave_change: "Anger fades. Courage endures."
