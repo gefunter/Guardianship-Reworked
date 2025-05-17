@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Sword Training event for the child in education. Results in Brave/Diligent/Wrathful
+- Separate branch for a version with Infinite Wards
