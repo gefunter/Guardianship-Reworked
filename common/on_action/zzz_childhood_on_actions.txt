@@ -1,0 +1,301 @@
+﻿child_personality_gain = {
+	trigger = {
+		is_adult = no
+		number_of_personality_traits < personality_trait_limit
+	}
+	random_events = {
+		100 = child_personality.0001 # craven, lazy or arbitrary
+		100 = child_personality.0002 # arrogant, compassionate or callous
+		100 = child_personality.0003 # deceitful, honest or humble
+		100 = child_personality.0004 # generous, diligent or patient
+		100 = child_personality.0005 # wrathful, forgiving or fickle
+		300 = child_personality.0006 # vengeful, chaste or stubborn - Weighted x3 because it can only be triggered as the 3rd and final personality event
+		100 = child_personality.0007 # just, cynical or temperate
+		300 = child_personality.0008 # greedy, gregarious or lustful - Weighted x3 because it can only be triggered as the 3rd and final personality event
+		100 = child_personality.0009 # brave, calm or zealous
+		100 = child_personality.0010 # ambitious, sadistic or paranoid
+		100 = child_personality.0011 # content, fickle or trusting
+		100 = child_personality.0012 # impatient, shy or gluttonous
+		
+		100 = child_personality.7000 # diligent, gregarious, temperate
+		100 = child_personality.7010 # zealous, ambitious, sadistic
+		100 = child_personality.7020 # shy, paranoid, craven
+		100 = child_personality.7030 # lazy, gluttonous, compassionate
+		600 = child_personality.7040 # lustful, chaste - Weighted x6 because it can only be triggered as the 3rd and final personality event
+		100 = child_personality.7050 # just, greedy, callous
+		100 = child_personality.7060 # humble, cynical, content
+		100 = child_personality.7070 # vengeful, deceitful, calm
+		100 = child_personality.7080 # generous, fickle, arrogant
+		100 = child_personality.7090 # forgiving, trusting, patient
+		100 = child_personality.7100 # honest, arbitrary, impatient
+		100 = child_personality.7200 # brave, stubborn, wrathful
+		10 = child_personality.7300 # eccentric, compassionate, callous
+		10 = child_personality.7400 # eccentric, fickle, stubborn
+
+        # Guardianship Rework events begin
+        100 = gef_child_personality.0001 # brave, diligent, wrathful
+        # Guardianship Rework events end
+
+		#In prison
+		100 = child_personality.0021 ##Gain lustful
+		100 = child_personality.0022 ##Gain chaste
+		100 = child_personality.0023 ##Gain gluttonous
+		100 = child_personality.0024 ##Gain temperate
+		100 = child_personality.0025 ##Gain greedy
+		50 = child_personality.0026 ##Gain generous
+		100 = child_personality.0027 ##Gain lazy
+		100 = child_personality.0028 ##Gain diligent
+		100 = child_personality.0029 ##Gain wrathful
+		100 = child_personality.0030 ##Gain calm
+		100 = child_personality.0031 ##Gain patient
+		100 = child_personality.0032 ##Gain impatient
+		100 = child_personality.0033 ##Gain arrogant
+		100 = child_personality.0034 ##Gain humble
+		100 = child_personality.0035 ##Gain deceitful
+		50 = child_personality.0036 ##Gain honest
+		100 = child_personality.0037 ##Gain craven
+		100 = child_personality.0038 ##Gain brave
+		100 = child_personality.0039 ##Gain shy
+		100 = child_personality.0040 ##Gain gregarious
+		100 = child_personality.0041 ##Gain ambitious
+		100 = child_personality.0042 ##Gain content
+		100 = child_personality.0043 ##Gain arbitrary
+		100 = child_personality.0044 ##Gain just
+		100 = child_personality.0045 ##Gain cynical
+		100 = child_personality.0046 ##Gain zealous
+		100 = child_personality.0047 ##Gain paranoid
+		50 = child_personality.0048 ##Gain trusting
+		50 = child_personality.0049 ##Gain compassionate
+		100 = child_personality.0050 ##Gain callous
+		100 = child_personality.0051 ##Gain sadistic
+		100 = child_personality.0052 ##Gain stubborn
+		100 = child_personality.0053 ##Gain fickle
+		100 = child_personality.0054 ##Gain vengeful
+		50 = child_personality.0055 ##Gain forgiving
+	}
+}
+
+on_ward_arrive_at_guardian = {
+	effect = {
+		if = {
+			limit = {
+				# Ward still valid
+				is_alive = yes
+				is_adult = no
+				is_playable_character = no
+				num_of_relation_guardian = 0
+				# Guardian still valid
+				var:ward_travelling_to_guardian ?= {
+					is_alive = yes
+				}
+				OR = {
+					scope:guardian = { is_playable_character = yes }
+					exists = scope:guardian.host
+					exists = scope:guardian.liege
+				}
+			}
+			# Move to court
+			if = {
+				limit = {
+					scope:guardian = { is_playable_character = yes }
+					NOT = { host = scope:guardian }
+				}
+				visit_court_of = scope:guardian
+			}
+			else_if = {
+				limit = {
+					exists = scope:guardian.host
+					NOT = { host = scope:guardian.host }
+				}
+				visit_court_of = scope:guardian.host
+			}
+			else_if = {
+				limit = {
+					exists = scope:guardian.liege
+					NOT = { host = scope:guardian.liege }
+				}
+				visit_court_of = scope:guardian.liege
+			}
+			# Set relation
+			set_relation_guardian = scope:guardian
+			# Opinion
+			guardian_add_opinion_effect = {
+				GUARDIAN = scope:guardian
+				WARD_LIEGE = scope:ward_liege
+				WARD = scope:ward
+			}
+			# Convert culture setup
+			scope:ward = {
+				if = {
+					limit = { has_character_flag = convert_culture }
+					scope:guardian = {
+						add_relation_flag = {
+							relation = ward
+							target = scope:ward
+							flag = convert_culture
+						}
+					}
+					remove_character_flag = convert_culture
+				}
+				# Convert faith setup
+				if = {
+					limit = { has_character_flag = convert_faith }
+					scope:guardian = {
+						add_relation_flag = {
+							relation = ward
+							target = scope:ward
+							flag = convert_faith
+						}
+					}
+					remove_character_flag = convert_faith
+				}
+			}
+			# Fire events
+			scope:guardian ?= { trigger_event = char_interaction.0083 }
+			if = {
+				limit = {
+					NOT = { scope:guardian_liege ?= scope:guardian }
+				}
+				scope:guardian_liege = { trigger_event = char_interaction.0083 }
+			}
+			scope:ward_liege ?= { trigger_event = char_interaction.0084 }
+		}
+		else = { # Invalidate travel
+			scope:guardian = {
+				send_interface_toast = {
+					type = event_toast_effect_neutral
+					title = ward_invalidated_during_travel_title
+					left_icon = scope:ward
+					right_icon = scope:guardian
+					show_as_tooltip = {
+						scope:ward = { remove_relation_guardian = scope:guardian }
+					}
+				}
+			}
+			scope:ward_liege ?= {
+				send_interface_toast = {
+					type = event_toast_effect_neutral
+					title = ward_invalidated_during_travel_title
+					left_icon = scope:ward
+					right_icon = scope:guardian
+					scope:ward = {
+						show_as_tooltip = { remove_relation_guardian = scope:guardian }
+						current_travel_plan ?= {
+							if = {
+								limit = { can_cancel = yes }
+								cancel_travel_plan = yes
+							}
+						}
+						set_location_to_default = yes
+					}
+				}
+			}
+			debug_log = "Invalidated ward travel on arrival"
+			debug_log_scopes = yes
+		}
+		# Clean up variables
+		remove_variable = ward_travelling_to_guardian
+		remove_variable = character_making_education_request
+		scope:guardian ?= { remove_variable = guardian_waiting_for_ward }
+	}
+}
+
+on_guardian_arrive_at_ward = {
+	effect = {
+		if = {
+			limit = {
+				# Guardian still valid
+				is_alive = yes
+				# Ward still valid
+				var:guardian_travelling_to_ward ?= {
+					is_alive = yes
+					is_adult = no
+					is_playable_character = yes
+					num_of_relation_guardian = 0
+				}
+			}
+			# Move to court
+			visit_court_of = scope:ward
+			# Set relation
+			set_relation_ward = scope:ward
+			# Opinion
+			guardian_add_opinion_effect = {
+				GUARDIAN = scope:guardian
+				WARD_LIEGE = scope:ward_liege
+				WARD = scope:ward
+			}
+			# Convert culture setup
+			scope:ward = {
+				if = {
+					limit = { has_character_flag = convert_culture }
+					scope:guardian = {
+						add_relation_flag = {
+							relation = ward
+							target = scope:ward
+							flag = convert_culture
+						}
+					}
+					remove_character_flag = convert_culture
+				}
+				# Convert faith setup
+				if = {
+					limit = { has_character_flag = convert_faith }
+					scope:guardian = {
+						add_relation_flag = {
+							relation = ward
+							target = scope:ward
+							flag = convert_faith
+						}
+					}
+					remove_character_flag = convert_faith
+				}
+			}
+			# Fire events
+			scope:ward = { trigger_event = char_interaction.0082 }
+			if = {
+				limit = {
+					NOT = { scope:ward_liege = scope:ward }
+				}
+				scope:ward_liege = { trigger_event = char_interaction.0082 }
+			}
+		}
+		else = { # Invalidate travel
+			scope:ward = {
+				send_interface_toast = {
+					type = event_toast_effect_neutral
+					title = guardian_invalidated_during_travel_title
+					left_icon = scope:guardian
+					show_as_tooltip = {
+						scope:guardian = { remove_relation_ward = scope:ward }
+					}
+				}
+			}
+			scope:ward_liege ?= {
+				send_interface_toast = {
+					type = event_toast_effect_neutral
+					title = guardian_invalidated_during_travel_title
+					left_icon = scope:ward
+					right_icon = scope:guardian
+					scope:guardian = {
+						show_as_tooltip = { remove_relation_ward = scope:ward }
+						current_travel_plan = {
+							if = {
+								limit = { can_cancel = yes }
+								cancel_travel_plan = yes
+							}
+						}
+						set_location_to_default = yes
+					}
+				}
+			}
+			debug_log = "Invalidated guardian travel on arrival"
+			debug_log_scopes = yes
+		}
+		# Clean up variables
+		var:guardian_travelling_to_ward ?= {
+			remove_variable = character_making_education_request
+			remove_variable = ward_waiting_for_guardian
+		}
+		remove_variable = guardian_travelling_to_ward
+	}
+}
